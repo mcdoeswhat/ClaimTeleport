@@ -85,7 +85,7 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 				getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
 					public void run() {
 				   p.getLocation();
-					soundmanager.playSound(sender, Sound.ENTITY_ENDERMEN_TELEPORT, 10.0F, 1.4F);
+					soundmanager.playSound(sender, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 10.0F, 1.4F);
 					}
 					}, 2L);
 		 }
@@ -131,36 +131,36 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
 			public void run() {
 		   p.getLocation();
-		   soundmanager.playSound(sender, Sound.ENTITY_ENDERMEN_TELEPORT, 10.0F, 1.4F);
+		   soundmanager.playSound(sender, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 10.0F, 1.4F);
 			}
 			}, 2L);
 	}
 		 }
 		if (player==null) {
 			p.sendMessage(settings.invalidplayer);
-			soundmanager.playSound(sender, Sound.ENTITY_VILLAGER_NO, 10.0F, 1.1F);
+			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
 		if (id>=range && player!=null || id<0) {			
 			p.sendMessage(settings.invalidClaimID);
-			soundmanager.playSound(sender, Sound.ENTITY_VILLAGER_NO, 10.0F, 1.1F);
+			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
 	}
 	if (args.length==0 || args.length>2) {
 			p.sendMessage(settings.nullInput);
-			soundmanager.playSound(sender, Sound.ENTITY_VILLAGER_NO, 10.0F, 1.1F);
+			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 			
 		}
 	if ( args.length==2 && !Utils.isNumeric(args[1]) || args.length==1 && !Utils.isNumeric(args[0])) {
 		p.sendMessage(settings.notNumeric);
-		soundmanager.playSound(sender, Sound.ENTITY_VILLAGER_NO, 10.0F, 1.1F);
+		soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 	}
 		if (!p.hasPermission("ctp.other") && args.length==2 && Utils.isNumeric(args[1]) == true) {
 			p.sendMessage(settings.noPermission);
-			soundmanager.playSound(sender, Sound.ENTITY_VILLAGER_NO, 10.0F, 1.1F);
+			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
 	} if (!p.hasPermission("ctp.use") && args.length==1 && Utils.isNumeric(args[0]) == true) {
 			p.sendMessage(settings.noPermission);
-			soundmanager.playSound(sender, Sound.ENTITY_VILLAGER_NO, 10.0F, 1.1F);
+			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
 		 } else {
 			 sender.sendMessage("§cOnly ingame players can excute this command");
