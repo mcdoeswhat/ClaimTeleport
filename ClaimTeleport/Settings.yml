@@ -1,0 +1,17 @@
+Messages:
+  TeleportSuccess: "&aTeleporting..."
+  NoPermission: "&cYou dont have permission!"
+  InvalidClaimID: "&cInvalid ClaimID"
+  NotNumeric: "&cPlease insert valid numbers!"
+  NullInput: "&cWrong command usage"
+  InvalidPlayer: "&cPlayer not found!"
+Sound:
+  Enabled: true
+ #Chinese language
+#Messages:
+  #TeleportSuccess: "&a已传送"
+  #NoPermission: "&c你没有权限!"
+  #InvalidClaimID: "&c错误的领地ID"
+  #NotNumeric: "&c错误的指令用法!"
+  #NullInput: "&c错误的指令用法"
+  #InvalidPlayer: "&c玩家没有找到!"
