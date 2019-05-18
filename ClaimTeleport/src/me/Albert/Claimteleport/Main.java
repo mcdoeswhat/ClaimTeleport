@@ -150,7 +150,8 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 			
 		}
-	if ( args.length==2 && !Utils.isNumeric(args[1]) || args.length==1 && !Utils.isNumeric(args[0])) {
+	if ( args.length==2 && !Utils.isNumeric(args[1]) || args.length==1 && !Utils.isNumeric(args[0]) 
+			) {
 		p.sendMessage(settings.notNumeric);
 		soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 	}
@@ -158,7 +159,7 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 			p.sendMessage(settings.noPermission);
 			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
-	} if (!p.hasPermission("ctp.use") && args.length==1 && Utils.isNumeric(args[0]) == true) {
+	} if (!p.hasPermission("ctp.use")) {
 			p.sendMessage(settings.noPermission);
 			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
