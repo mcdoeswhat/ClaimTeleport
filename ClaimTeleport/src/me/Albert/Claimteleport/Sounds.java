@@ -1,9 +1,11 @@
 package me.Albert.Claimteleport;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
-public enum Sounds {
+import com.google.common.primitives.Ints;
 
+public enum Sounds {
 	AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE", "AMBIENT_CAVE"),
 	AMBIENCE_RAIN("AMBIENCE_RAIN", "WEATHER_RAIN", "WEATHER_RAIN"),
 	AMBIENCE_THUNDER("AMBIENCE_THUNDER", "ENTITY_LIGHTNING_THUNDER", "ENTITY_LIGHTNING_BOLT_THUNDER"),
@@ -163,8 +165,7 @@ public enum Sounds {
 	FIREWORK_BLAST("FIREWORK_BLAST", "ENTITY_FIREWORK_BLAST", "ENTITY_FIREWORK_ROCKET_BLAST"),
 	FIREWORK_BLAST2("FIREWORK_BLAST2", "ENTITY_FIREWORK_BLAST_FAR", "ENTITY_FIREWORK_ROCKET_BLAST_FAR"),
 	FIREWORK_LARGE_BLAST("FIREWORK_LARGE_BLAST", "ENTITY_FIREWORK_LARGE_BLAST", "ENTITY_FIREWORK_ROCKET_LARGE_BLAST"),
-	FIREWORK_LARGE_BLAST2("FIREWORK_LARGE_BLAST2", "ENTITY_FIREWORK_LARGE_BLAST_FAR",
-			"ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR"),
+	FIREWORK_LARGE_BLAST2("FIREWORK_LARGE_BLAST2", "ENTITY_FIREWORK_LARGE_BLAST_FAR", "ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR"),
 	FIREWORK_TWINKLE("FIREWORK_TWINKLE", "ENTITY_FIREWORK_TWINKLE", "ENTITY_FIREWORK_ROCKET_TWINKLE"),
 	FIREWORK_TWINKLE2("FIREWORK_TWINKLE2", "ENTITY_FIREWORK_TWINKLE_FAR", "ENTITY_FIREWORK_ROCKET_TWINKLE_FAR"),
 	FIREWORK_LAUNCH("FIREWORK_LAUNCH", "ENTITY_FIREWORK_LAUNCH", "ENTITY_FIREWORK_ROCKET_LAUNCH"),
@@ -197,7 +198,13 @@ public enum Sounds {
 	VILLAGER_IDLE("VILLAGER_IDLE", "ENTITY_VILLAGER_AMBIENT", "ENTITY_VILLAGER_AMBIENT"),
 	VILLAGER_NO("VILLAGER_NO", "ENTITY_VILLAGER_NO", "ENTITY_VILLAGER_NO"),
 	VILLAGER_YES("VILLAGER_YES", "ENTITY_VILLAGER_YES", "ENTITY_VILLAGER_YES");
+	
+	static {
+		Integer value = Ints.tryParse(Bukkit.getServer().getClass().getPackage().getName().split("_")[1]);
+		version = value != null ? value.intValue() : -1;
+	}
 
+	private static int version;
 	private String v18sound;
 	private String v19sound;
 	private String v113sound;
@@ -209,16 +216,12 @@ public enum Sounds {
 	}
 
 	public Sound bukkitSound() {
-		int NMSVersion = NMSUtil.getVersionNumber();
-
-		if (NMSVersion < 9) {
-			return Sound.valueOf(v18sound);
-		} else if (NMSVersion < 13) {
-			return Sound.valueOf(v19sound);
-		} else if (NMSVersion > 12) {
-			return Sound.valueOf(v113sound);
+		if (version == -1) {
+			// Something went wrong.
+			return null;
 		}
-
-		return null;
+		if (version <= 8) return Sound.valueOf(v18sound);
+		if (version <= 12) return Sound.valueOf(v19sound);
+		return Sound.valueOf(v113sound);
 	}
 }
