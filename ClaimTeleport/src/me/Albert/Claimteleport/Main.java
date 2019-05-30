@@ -1,5 +1,6 @@
 package me.Albert.Claimteleport;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -61,7 +62,6 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 		// TODO Auto-generated method stub    
 		Player p = (Player)sender;
 		UUID uuid = p.getUniqueId();
-		p.getLocation();
 		if(p.hasPermission("ctp.use") == true) {
 		if (args.length==1) {
 		if (Utils.isNumeric(args[0]) == true) {
@@ -69,25 +69,7 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 		int range = GriefPrevention.instance.dataStore.getPlayerData(uuid).getClaims().size();
 		 if ( cmd.getName().equalsIgnoreCase("claimteleport") && input<range  && input >=0){
 			 if (args[0] != null) { 
-				Location claimloc1 = GriefPrevention.instance.dataStore.getPlayerData(uuid).getClaims().get(input).getGreaterBoundaryCorner();
-				Location claimloc2 = GriefPrevention.instance.dataStore.getPlayerData(uuid).getClaims().get(input).getLesserBoundaryCorner();
-				int x1 = claimloc1.getBlockX();
-				int z1 = claimloc1.getBlockZ();
-				int x2 = claimloc2.getBlockX();
-				int z2 = claimloc2.getBlockZ();
-				int x = (x1-x2)/2+x2;
-				int z = (z1-z2)/2+z2;
-				int y = p.getWorld().getHighestBlockAt(x,z).getY();
-				World w = claimloc1.getWorld();
-				Location safe = new Location(w,x,y,z);
-				p.teleport(safe);
-				p.sendMessage(settings.teleportSuccess);
-				getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
-					public void run() {
-				   p.getLocation();
-					soundmanager.playSound(sender, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 10.0F, 1.4F);
-					}
-					}, 2L);
+				teleport(p,input,p.getUniqueId());
 		 }
 			 
 		 }  if (input>=range || input<0) {
@@ -111,29 +93,11 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 		int range = 0;
 		 if (player!=null) {
 			 target = Bukkit.getOfflinePlayer(player.getName());
-			uuid2 = target.getUniqueId();
+			 uuid2 = target.getUniqueId();
 			range = GriefPrevention.instance.dataStore.getPlayerData(uuid2).getClaims().size();
 		 
 		if (target.hasPlayedBefore()==true && id<range && id>=0) {
-		Location claimloc1 = GriefPrevention.instance.dataStore.getPlayerData(uuid2).getClaims().get(id).getGreaterBoundaryCorner();
-		Location claimloc2 = GriefPrevention.instance.dataStore.getPlayerData(uuid2).getClaims().get(id).getLesserBoundaryCorner();
-		int x1 = claimloc1.getBlockX();
-		int z1 = claimloc1.getBlockZ();
-		int x2 = claimloc2.getBlockX();
-		int z2 = claimloc2.getBlockZ();
-		int x = (x1-x2)/2+x2;
-		int z = (z1-z2)/2+z2;
-		int y = p.getWorld().getHighestBlockAt(x,z).getY();
-		World w = claimloc1.getWorld();
-		Location safe = new Location(w,x,y,z);
-		p.teleport(safe);
-		p.sendMessage(settings.teleportSuccess);
-		getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
-			public void run() {
-		   p.getLocation();
-		   soundmanager.playSound(sender, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 10.0F, 1.4F);
-			}
-			}, 2L);
+		teleport(p,id,uuid2);
 	}
 		 }
 		if (player==null) {
@@ -170,6 +134,73 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 		 
 		return true;
 		 
+	}
+	
+	public HashMap<String, Long> cooldowns = new HashMap<String, Long>();
+	
+	public void teleport(Player sender,int claimid,UUID uuid) {
+		Location a =sender.getLocation();
+		Location claimloc1 = GriefPrevention.instance.dataStore.getPlayerData(uuid).getClaims().get(claimid).getGreaterBoundaryCorner();
+		Location claimloc2 = GriefPrevention.instance.dataStore.getPlayerData(uuid).getClaims().get(claimid).getLesserBoundaryCorner();
+		int x1 = claimloc1.getBlockX();
+		int z1 = claimloc1.getBlockZ();
+		int x2 = claimloc2.getBlockX();
+		int z2 = claimloc2.getBlockZ();
+		int x = (x1-x2)/2+x2;
+		int z = (z1-z2)/2+z2;
+		int y = sender.getWorld().getHighestBlockAt(x,z).getY();
+		World w = claimloc1.getWorld();
+		Location safe = new Location(w,x,y,z);
+		if (sender.hasPermission("ctp.cooldownbypass")) {
+			sender.teleport(safe);
+			teleportsound(sender);
+			sender.sendMessage(settings.teleportSuccess);
+			
+		} else
+		if(cooldowns.containsKey(sender.getName())) {
+            long secondsLeft = ((cooldowns.get(sender.getName())/1000)+settings.delay) - (System.currentTimeMillis()/1000);
+            if(secondsLeft>0) {
+                // Still cooling down
+                sender.sendMessage(settings.incooldown);
+            } else {
+            	cooldowns.remove(sender.getName());
+            }
+        } else {
+        cooldowns.put(sender.getName(), System.currentTimeMillis());
+		if (settings.delay > 0) {
+			sender.sendMessage(settings.teleporting.replace("%s%", String.valueOf(settings.delay)));
+			
+		}
+		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			public void run() {
+		    if (sender.getLocation().getWorld() == a.getWorld()) {
+		    	if (sender.getLocation().distanceSquared(a) < 2) {
+		    cooldowns.remove(sender.getName());
+			sender.teleport(safe);
+			teleportsound(sender);
+			sender.sendMessage(settings.teleportSuccess);
+		    	}
+		    	else {
+					sender.sendMessage(settings.playermoved);
+					cooldowns.remove(sender.getName());
+				}
+			} else {
+				sender.sendMessage(settings.playermoved);
+				cooldowns.remove(sender.getName());
+			}
+			}
+			}, 20L * settings.delay);
+        }
+		
+	}
+	@SuppressWarnings("deprecation")
+	public void teleportsound(Player p) {
+		getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+			public void run() {
+		   soundmanager.playSound(p, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 10.0F, 1.4F);
+			}
+			}, 2L);
+		
 	}
 	
 	

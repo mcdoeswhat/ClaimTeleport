@@ -1,15 +1,26 @@
 Messages:
   TeleportSuccess: "&aTeleporting..."
+  Teleporting: "&cTelepot in %s% seconds,please do not move..."
+  playermoved: "&cYou moved teleport canceled!"
+  incooldown: "&cYou are still in teleport cooldown"
   NoPermission: "&cYou dont have permission!"
   InvalidClaimID: "&cInvalid ClaimID"
   NotNumeric: "&cPlease insert valid numbers!"
   NullInput: "&cWrong command usage"
   InvalidPlayer: "&cPlayer not found!"
+  
 Sound:
   Enabled: true
+  
+ #teleport delay , in seconds
+delay: 3
+
  #Chinese language
 #Messages:
   #TeleportSuccess: "&a已传送"
+  #Teleporting: "&c将会在%s%秒内传送,请不要移动"
+  #playermoved: "&c你移动了!传送取消!"
+  #incooldown: "&c你正在传送冷却中"
   #NoPermission: "&c你没有权限!"
   #InvalidClaimID: "&c错误的领地ID"
   #NotNumeric: "&c错误的指令用法!"

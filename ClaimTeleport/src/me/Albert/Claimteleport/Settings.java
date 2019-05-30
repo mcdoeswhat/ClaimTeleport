@@ -9,10 +9,14 @@ public class Settings {
 	private File SettingsFile = new File(Main.getInstance().getDataFolder(), "Settings.yml");
 	private YamlConfiguration config;
 	public String teleportSuccess;
+	public String teleporting;
+	public String playermoved;
+	public String incooldown;
 	public String noPermission;
 	public String invalidClaimID;
 	public String notNumeric;
 	public String nullInput;
+	public int delay;
 	public boolean sound;
 	public String invalidplayer;
 	public Settings() {
@@ -25,6 +29,10 @@ public class Settings {
 		}
 		
 		this.config = YamlConfiguration.loadConfiguration(this.SettingsFile);
+		this.delay =  this.config.getInt("delay");
+		this.playermoved = ChatColor.translateAlternateColorCodes('&', this.config.getString("Messages.playermoved"));
+		this.incooldown = ChatColor.translateAlternateColorCodes('&', this.config.getString("Messages.incooldown"));
+		this.teleporting = ChatColor.translateAlternateColorCodes('&', this.config.getString("Messages.Teleporting"));
 		this.teleportSuccess = ChatColor.translateAlternateColorCodes('&', this.config.getString("Messages.TeleportSuccess"));
 		this.noPermission = ChatColor.translateAlternateColorCodes('&', this.config.getString("Messages.NoPermission"));
 		this.invalidClaimID = ChatColor.translateAlternateColorCodes('&', this.config.getString("Messages.InvalidClaimID"));
