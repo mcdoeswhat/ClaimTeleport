@@ -148,7 +148,7 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 		int z2 = claimloc2.getBlockZ();
 		int x = (x1-x2)/2+x2;
 		int z = (z1-z2)/2+z2;
-		int y = sender.getWorld().getHighestBlockAt(x,z).getY();
+		int y = sender.getWorld().getHighestBlockAt(x,z).getY()+1;
 		World w = claimloc1.getWorld();
 		Location safe = new Location(w,x,y,z);
 		if (sender.hasPermission("ctp.cooldownbypass")) {

@@ -198,7 +198,7 @@ public enum Sounds {
 	VILLAGER_IDLE("VILLAGER_IDLE", "ENTITY_VILLAGER_AMBIENT", "ENTITY_VILLAGER_AMBIENT"),
 	VILLAGER_NO("VILLAGER_NO", "ENTITY_VILLAGER_NO", "ENTITY_VILLAGER_NO"),
 	VILLAGER_YES("VILLAGER_YES", "ENTITY_VILLAGER_YES", "ENTITY_VILLAGER_YES");
-	
+
 	static {
 		Integer value = Ints.tryParse(Bukkit.getServer().getClass().getPackage().getName().split("_")[1]);
 		version = value != null ? value.intValue() : -1;
