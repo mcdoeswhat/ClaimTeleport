@@ -150,7 +150,7 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 		int z = (z1-z2)/2+z2;
 		int y = sender.getWorld().getHighestBlockAt(x,z).getY()+1;
 		World w = claimloc1.getWorld();
-		Location safe = new Location(w,x,y,z);
+		Location safe = new Location(w,x+0.5,y,z+0.5);
 		if (sender.hasPermission("ctp.cooldownbypass")) {
 			sender.teleport(safe);
 			teleportsound(sender);
