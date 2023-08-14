@@ -3,7 +3,6 @@ package me.Albert.Claimteleport;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
-import com.google.common.primitives.Ints;
 
 public enum Sounds {
 	AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE", "AMBIENT_CAVE"),
@@ -200,7 +199,9 @@ public enum Sounds {
 	VILLAGER_YES("VILLAGER_YES", "ENTITY_VILLAGER_YES", "ENTITY_VILLAGER_YES");
 
 	static {
-		Integer value = Ints.tryParse(Bukkit.getServer().getClass().getPackage().getName().split("_")[1]);
+		//Integer value = Ints.tryParse(Bukkit.getServer().getClass().getPackage().getName().split("_")[1]);
+		Integer value = Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().split("_")[1]);
+
 		version = value != null ? value.intValue() : -1;
 	}
 
