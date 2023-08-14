@@ -13,21 +13,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-
-import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.User;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener {
 	private static Settings settings;
 	private static SoundManager soundmanager;
 	private static Main instance;
-	private static Essentials ess;
-	public void onEnable(){	
-		new Metrics(this);	
+	public void onEnable(){
 		
 		Plugin griefPreventionPlugin = Bukkit.getPluginManager().getPlugin("GriefPrevention");
-		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		if ((griefPreventionPlugin == null)) {
 			 Bukkit.getConsoleSender().sendMessage("§cGriefPrevention not found!ClaimTeleport Disabled!");
@@ -71,7 +65,7 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 			 if (args[0] != null) { 
 				teleport(p,input,p.getUniqueId());
 		 }
-			 
+
 		 }  if (input>=range || input<0) {
 			 p.sendMessage(settings.invalidClaimID);
 			 soundmanager.playSound(sender, Sound.ENTITY_VILLAGER_NO, 10.0F, 1.1F);
@@ -80,31 +74,44 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 	} if (args.length==2 && Utils.isNumeric(args[1]) == true && p.hasPermission("ctp.other")) {
 		
 		int id = Integer.parseInt(args[1])-1;
-		User player = null;
+		Player player = null;
+		OfflinePlayer offlinePlayer = null;
+
 		try {
-            UUID uuid1 = UUID.fromString(args[0]);
-            player = ess.getUser(uuid1);
-        }catch (IllegalArgumentException ignored) { // Thrown if invalid UUID from string, check by name.
-            player = ess.getOfflineUser(args[0]);
-        } 
+            UUID uuid1 = UUID.fromString(Bukkit.getOfflinePlayer(args[0]).getPlayer().getUniqueId().toString());
+           player = Bukkit.getPlayer(uuid1);
+        }catch (NullPointerException ignored) { // Thrown if invalid UUID from string, check by name.
+			offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+        }
 		
 		OfflinePlayer target = null;
 		UUID uuid2 = null;
 		int range = 0;
-		 if (player!=null) {
-			 target = Bukkit.getOfflinePlayer(player.getName());
+		 if (player!=null && offlinePlayer == null) {
+			 target = Bukkit.getOfflinePlayer(args[0]);
 			 uuid2 = target.getUniqueId();
 			range = GriefPrevention.instance.dataStore.getPlayerData(uuid2).getClaims().size();
-		 
-		if (target.hasPlayedBefore()==true && id<range && id>=0) {
+
+		if (target.hasPlayedBefore() && id<range && id>=0) {
 		teleport(p,id,uuid2);
 	}
 		 }
-		if (player==null) {
+
+		 if (player == null && offlinePlayer != null) {
+			 target = Bukkit.getOfflinePlayer(args[0]);
+			 uuid2 = target.getUniqueId();
+			 range = GriefPrevention.instance.dataStore.getPlayerData(uuid2).getClaims().size();
+
+			 if (target.hasPlayedBefore() && id<range && id>=0) {
+				 teleport(p,id,uuid2);
+			 }
+		 }
+
+		if (player==null & offlinePlayer == null) {
 			p.sendMessage(settings.invalidplayer);
 			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
-		if (id>=range && player!=null || id<0) {			
+		if (id>=range && player!=null || id>=range && offlinePlayer!=null || id<0) {
 			p.sendMessage(settings.invalidClaimID);
 			soundmanager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 10.0F, 1.1F);
 		}
