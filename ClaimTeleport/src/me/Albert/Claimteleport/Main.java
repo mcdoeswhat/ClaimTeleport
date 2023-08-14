@@ -79,15 +79,9 @@ public class Main extends org.bukkit.plugin.java.JavaPlugin implements Listener 
 
 		try {
             UUID uuid1 = UUID.fromString(Bukkit.getOfflinePlayer(args[0]).getPlayer().getUniqueId().toString());
-            //player = ess.getUser(uuid1);
            player = Bukkit.getPlayer(uuid1);
-            //sender.sendMessage("Working 1");
         }catch (NullPointerException ignored) { // Thrown if invalid UUID from string, check by name.
-            //player = ess.getOfflineUser(args[0]);
 			offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-            //sender.sendMessage("Working 2");
-            //sender.sendMessage(Bukkit.getOfflinePlayer(args[0]).getPlayer().toString());
-            //sender.sendMessage(args[0]);
         }
 		
 		OfflinePlayer target = null;
